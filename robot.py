@@ -1,96 +1,90 @@
 import sys
 def name_of_the_robot():
-    name = input("What do you want to name your robot? ")
-    print("{}: Hello kiddo! ".format(name))
+    name =  input("What do you want to name your robot? ")
     return name
 
 
-def get_command_input(name):
-    command = input(f"{name}: What must I do next? ")
-    return command.lower()
+def help(name):
+    print("I can understand these commands:\nOFF  - Shut down robot\nHELP - provide information about commands\n")
 
-def off():
-    print("Shutting down..")
-    return
-
-def help_menu():
-    print("I can understand these commands:\nOFF  - Shut down robot")
-    print("HELP - provide information about commands")
+def command_switcher(command, yaxis, xaxis,coords, name):
+    commands = ["off", "help", "forward", "back", "left", "right"]
     
-def movement(direction, steps, y_axis, x_axis,coords):
-
-    if direction == "forward":
-        y_axis = y_axis + steps
-        print("this is {} by {} steps".format(direction, steps))
-    elif direction == "back":
-        y_axis = y_axis - steps
-        print("this is {} by {} steps".format(direction, steps))
-    elif direction == "left":
-        x_axis = x_axis - steps
-        print("this is {} by {} steps".format(direction, steps))
-    elif direction == "right":
-        x_axis = x_axis + steps
-        print("this is {} by {} steps".format(direction, steps))
-    coords = (x_axis,y_axis)
-    print(coords)
-    return coords
+    if "forward" in command:
+        movement(command, yaxis, xaxis, coords,name)
+    if "back" in command:
+        movement(command, yaxis, xaxis, coords,name)
+    if "left" in command:
+        movement(command, yaxis, xaxis, coords,name)
+    if "right" in command:
+        movement(command, yaxis, xaxis, coords,name)
+    
 
 
-
-
-def command_handling(command,steps,x_axis,y_axis, coords):
-        if "off" in command:
-            off()
-            return quit()
-        if "help" in command:
-            help_menu()
-            print()
-        if "forward" in command:
-            direction = command
-            coords = movement(direction,steps, x_axis, y_axis,coords)
-        if "back" in command:
-            direction = command
-            coords = movement(direction,steps, x_axis, y_axis,coords)
-        if "left" in command:
-            direction = command
-            coords = movement(direction,steps, x_axis, y_axis,coords)
-        if "right" in command:
-            direction = command
-            coords = movement(direction,steps, x_axis, y_axis,coords)
-            return coords
-
-        
-                 
-
-
-        
-
-
-def robot_start():
-    x = 0
-    y = 0
-    coords = (x,y)
-
-    commands = ["off","help", "forward","back", "left","right"]
-
-    name = name_of_the_robot()
-    command = get_command_input(name)
-    command, steps = command.split()
-    steps = int(steps)
+    while command != "off" and command in commands:
+        command = user_command(name)
+    if command == "off":
+        print("Shutting down..")
+        return
+    if command == "help":
+        help()
 
     while command not in commands:
-        print("Sorry I did not understand '{}'".format(command))
-        command = get_command_input(name)
+        print("Sorry I did not understand '{}'. ".format(command))
+        command = user_command(name).lower()
+        command_switcher(command, yaxis, xaxis,coords, name)
 
-    while command is not "off":
-        coords = command_handling(command, steps, x, y, coords)
-        command = get_command_input(name)
 
-    
+def direction(command):
+    cardinals = ["n", "s", "e", "w"]
+
+    if command == "left" and cardinals:
+        pass
+
+
+def movement(command, yaxis, xaxis,coords,name):
+    command, steps = command.split()
+
+    if command == "forward":
+        yaxis = yaxis + int(steps)
+        coords = (xaxis, yaxis)
+        print("> {} moved forward by {} steps".format(name,steps))
+        print("> {} is now at {}".format(name, coords))
+        command = user_command(name).lower()
+        result_switcher = command_switcher(command, yaxis, xaxis, coords, name)
+    if command == "back":
+        yaxis = yaxis - int(steps)
+        coords = (xaxis, yaxis)
+        print("> {} moved forward by {} steps".format(name,steps))
+        print("> {} is now at {}".format(name, coords))
+        command = user_command(name).lower()
+        result_switcher = command_switcher(command, yaxis, xaxis, coords, name)
+    if command == "left":
+        pass
         
+
+
+def user_command(name):
+    return input("{}: what must I do next? ".format(name)).lower()
+
+def robot_start():
+    commands = ["off", "help", "forward", "back", "left", "right"]
+    name = name_of_the_robot()
+
+    yaxis = 0
+    xaxis = 0
+    coords = (xaxis, yaxis)
+
+    print("Hello kiddo!")
+
+    command = user_command(name).lower()
+    while True:
+        result_switcher = command_switcher(command, yaxis, xaxis, coords, name)
+        break
     
 
 
 
 if __name__ == "__main__":
+
     robot_start()
