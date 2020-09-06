@@ -4,8 +4,19 @@ def name_of_the_robot():
     return name
 
 
-def help(name):
-    print("I can understand these commands:\nOFF  - Shut down robot\nHELP - provide information about commands\n")
+def help_(command, yaxis, xaxis,coords, name):
+    command_list = ["OFF  - Shut down robot",
+    "HELP - provide information about commands",
+    "FORWARD - Moves robot forward",
+    "BACK - Moves robot backwards",
+    "LEFT - Turns the robot to  the left",
+    "RIGHT - Turns the robot to the right"]
+    print("I can understyand these commands:")
+    for commands in command_list:
+        print(commands)
+    command = user_command(name)
+    command_switcher(command, yaxis, xaxis,coords, name)
+    
 
 def command_switcher(command, yaxis, xaxis,coords, name):
     commands = ["off", "help", "forward", "back", "left", "right"]
@@ -19,33 +30,28 @@ def command_switcher(command, yaxis, xaxis,coords, name):
     if "right" in command:
         movement(command, yaxis, xaxis, coords,name)
     
-
+    if command == "help":
+        help_(command, yaxis, xaxis,coords, name)
 
     while command != "off" and command in commands:
         command = user_command(name)
     if command == "off":
         print("Shutting down..")
         return
-    if command == "help":
-        help()
-
+    
     while command not in commands:
         print("Sorry I did not understand '{}'. ".format(command))
         command = user_command(name).lower()
         command_switcher(command, yaxis, xaxis,coords, name)
 
 
-def direction(command):
-    cardinals = ["n", "s", "e", "w"]
-
-    if command == "left" and cardinals:
-        pass
-
-
 def movement(command, yaxis, xaxis,coords,name):
-    command, steps = command.split()
+    north_south = True
+    east_west = False
 
-    if command == "forward":
+
+    if command == "forward" and north_south is True:
+        command, steps = command.split()
         yaxis = yaxis + int(steps)
         coords = (xaxis, yaxis)
         print("> {} moved forward by {} steps".format(name,steps))
@@ -53,6 +59,7 @@ def movement(command, yaxis, xaxis,coords,name):
         command = user_command(name).lower()
         result_switcher = command_switcher(command, yaxis, xaxis, coords, name)
     if command == "back":
+        command, steps = command.split()
         yaxis = yaxis - int(steps)
         coords = (xaxis, yaxis)
         print("> {} moved forward by {} steps".format(name,steps))
@@ -60,8 +67,16 @@ def movement(command, yaxis, xaxis,coords,name):
         command = user_command(name).lower()
         result_switcher = command_switcher(command, yaxis, xaxis, coords, name)
     if command == "left":
-        pass
-        
+        print("> {} turned left.".format(name))
+
+        if north_south is True:
+            north_south = False
+            east_west = True
+        else:
+            north_south = True
+            east_west = False
+
+
 
 
 def user_command(name):
@@ -88,3 +103,4 @@ def robot_start():
 if __name__ == "__main__":
 
     robot_start()
+
