@@ -10,8 +10,9 @@ def command_switcher(command, yaxis, xaxis,coords, name):
         command, steps = command
         steps = int(steps)
         if steps > 200:
+            coords = (str(xaxis)+","+str(yaxis))
             print("{}: Sorry, I cannot go outside my safe zone.".format(name))
-            print(" > {} now at position {}".format(name,coords))
+            print(" > {} now at position ({})".format(name,coords))
             return
             
 
