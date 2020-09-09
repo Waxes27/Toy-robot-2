@@ -1,5 +1,5 @@
-
-PosNeg = 1
+def sprint(command, name):
+    pass
 
 def name_of_the_robot():
     name = input("What do you want to name your robot? ")
@@ -25,8 +25,7 @@ def command_switcher(command, yaxis, xaxis,coords, name, direction):
         return        
     if "left" in command:
         direction = left(name, direction, coords, yaxis, xaxis)
-        return direction
-            
+        return direction            
     if "right" in command:
         direction = right(name, direction, coords, yaxis, xaxis)
         return direction
@@ -35,7 +34,7 @@ def command_switcher(command, yaxis, xaxis,coords, name, direction):
 def left(name,direction,coords, yaxis, xaxis):
     coord = (str(xaxis)+","+str(yaxis))
     print(" > {} turned left.".format(name))
-    print(" > {} now at position {}.".format(name,coords))
+    print(" > {} now at position ({}).".format(name,coord))
     if direction == "north":
         direction = "west"
     elif direction == "west":
@@ -170,7 +169,7 @@ def robot_start():
 
         elif "left" in command:
             direction = left(name, direction, coords, yaxis,xaxis)
-            command_switcher(command, yaxis, xaxis, coords, name, direction)
+            #command_switcher(command, yaxis, xaxis, coords, name, direction)
             command = user_command(name)
             continue
 
@@ -179,12 +178,11 @@ def robot_start():
             #command_switcher(command, yaxis, xaxis, coords, name, direction)
             command = user_command(name)
             continue
+        
+        elif "sprint" in command:
+            sprint(command, name)
 
-
-        break
-            
+        break         
     
-
 if __name__ == "__main__":
-
     robot_start()
