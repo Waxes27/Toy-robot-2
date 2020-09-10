@@ -22,7 +22,7 @@ class Test_robot(unittest.TestCase):
             self.assertEqual(output,"What do you want to name your robot? HALBERD")
         print(output)
     
-    def test_
+    
 
 
 
