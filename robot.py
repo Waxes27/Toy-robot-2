@@ -41,7 +41,7 @@ def command_switcher(command, yaxis, xaxis,coords, name, direction):
     elif "right" in command:
         direction = right(name, direction, coords, yaxis, xaxis)
         return direction
-            
+
 
 def left(name,direction,coords, yaxis, xaxis):
     coord = (str(xaxis)+","+str(yaxis))
