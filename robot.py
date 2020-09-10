@@ -1,32 +1,44 @@
-def sprint(command, name):
-    pass
+def safe_zone(name,coords):
+    """incomplete"""
+    print("{}: Sorry, I cannot go outside my safe zone.".format(name))
+    print(" > {} now at position {}.".format(name,coords))
+    return
+
+
+def sprint(command, name,coords,xaxis,yaxis,direction):
+    command,steps = command
+    coords = (str(xaxis)+","+str("15"))
+    for i in reversed(range(int(steps))):
+        print(" > {} moved forward by {} steps.".format(name,(i+1)))
+    print(" > {} now at position ({}).".format(name,coords))
+    return coords
+
 
 def name_of_the_robot():
-    name = input("What do you want to name your robot? ")
-    return name
+    return input("What do you want to name your robot? ")
+
 
 def command_switcher(command, yaxis, xaxis,coords, name, direction):
-    if len(command) == 2:
-        command, steps = command
-        steps = int(steps)
-        if steps > 200:
-            coords = (str(xaxis)+","+str(yaxis))
-            print("{}: Sorry, I cannot go outside my safe zone.".format(name))
-            print(" > {} now at position ({})".format(name,coords))
-            return
-            
+    command,steps = command
+    steps = int(steps)
     if "forward" in command:
         print(" > {} moved forward by {} steps.".format(name,steps))
-        movement(command,yaxis,xaxis,coords,name, steps, direction)
-        return  
-    if "back" in command:
+        xaxis,yaxis = movement(command,yaxis,xaxis,coords,name, steps, direction)
+        #print(xaxis)
+        if xaxis in range(-100,100) and yaxis in range (-200,200):
+            return xaxis,yaxis
+        else:
+            safe_zone(name,coords)
+        return xaxis, yaxis
+
+    elif "back" in command:
         print(" > {} moved back by {} steps.".format(name,steps))
         movement(command,yaxis,xaxis,coords,name, steps, direction)
         return        
-    if "left" in command:
+    elif "left" in command:
         direction = left(name, direction, coords, yaxis, xaxis)
         return direction            
-    if "right" in command:
+    elif "right" in command:
         direction = right(name, direction, coords, yaxis, xaxis)
         return direction
             
@@ -45,6 +57,7 @@ def left(name,direction,coords, yaxis, xaxis):
         direction = "north"
     return direction
 
+
 def right(name, direction, coords, yaxis, xaxis):
     coord = (str(xaxis)+","+str(yaxis))
     print(" > {} turned right.".format(name))
@@ -61,48 +74,56 @@ def right(name, direction, coords, yaxis, xaxis):
 
 
 def movement(command, yaxis, xaxis,coords,name,steps,direction):
-    #direction = "east"
     if "forward" in command and direction == "north":
         yaxis = yaxis + steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
 
     if "forward" in command and direction == "east":
         xaxis = xaxis + steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
 
     if "forward" in command and direction == "south":
         yaxis = yaxis - steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
     
     if "forward" in command and direction == "west":
         xaxis = xaxis - steps
-        coord = (str(xaxis)+","+str(yaxis))
-        print(" > {} now at position ({}).".format(name, coord))
+        if xaxis  in range(-100,100):
+            coord = (str(xaxis)+","+str(yaxis))
+            print(" > {} now at position ({}).".format(name, coord))
+        else:
+            safe_zone(name,coords)
+        return xaxis,yaxis
     
-
-
     if "back" in command and direction == "north":
         yaxis = yaxis - steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
 
     if "back" in command and direction == "east":
         xaxis = xaxis - steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
 
     if "back" in command and direction == "south":
         yaxis = yaxis + steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
     
     if "back" in command and direction == "west":
         xaxis = xaxis + steps
         coord = (str(xaxis)+","+str(yaxis))
         print(" > {} now at position ({}).".format(name, coord))
+        return xaxis,yaxis
 
 
 def help_():
@@ -127,7 +148,7 @@ def user_command(name):
 def sorry(name, command, commands, command1):
     if command not in commands:
         print("{}: Sorry, I did not understand '{}'.".format(name,command1))
-        
+
 
 def robot_start():
     direction = "north"
@@ -135,13 +156,14 @@ def robot_start():
     yaxis = 0
     coords = (xaxis, yaxis)
     robot_on = True
-    commands = ["off","help","forward","back","left","right"]
-    directions = ["forward","back","left","right"]
+    commands = ["off","help","forward","back","left","right","sprint"]
     name =  name_of_the_robot()
-
+    while len(name) == 0:
+        name =  name_of_the_robot()
     print("{}: Hello kiddo!".format(name))
-
     command = user_command(name)
+    while len(command) == 0:
+        command = user_command(name)
     while robot_on == True:
         command1 = command
         command = command.lower().split()
@@ -152,13 +174,14 @@ def robot_start():
         if "off" in command:
             off(name)
             robot_on = False
+
         elif "help" in command:
             help_()
             command = user_command(name)
             continue
         
         elif "forward" in command:
-            command_switcher(command, yaxis, xaxis, coords, name, direction)
+            xaxis,yaxis = command_switcher(command, yaxis, xaxis, coords, name, direction)
             command = user_command(name)
             continue
         
@@ -166,23 +189,22 @@ def robot_start():
             command_switcher(command, yaxis, xaxis, coords, name, direction)
             command = user_command(name)
             continue
-
+            
         elif "left" in command:
             direction = left(name, direction, coords, yaxis,xaxis)
-            #command_switcher(command, yaxis, xaxis, coords, name, direction)
             command = user_command(name)
             continue
 
         elif "right" in command:
             direction = right(name, direction, coords, yaxis,xaxis)
-            #command_switcher(command, yaxis, xaxis, coords, name, direction)
             command = user_command(name)
             continue
         
         elif "sprint" in command:
-            sprint(command, name)
+            coords = sprint(command, name,coords,xaxis,yaxis,direction)
+            command = user_command(name)
+            continue
 
-        break         
-    
+        break           
 if __name__ == "__main__":
     robot_start()

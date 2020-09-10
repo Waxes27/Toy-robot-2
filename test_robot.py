@@ -7,9 +7,9 @@ import robot
 class Test_robot(unittest.TestCase):
     @patch("sys.stdin", StringIO("HAL\n"))
     def test_get_command_input(self):
-        sys.stdout = StringIO
+        print
 
-        result = robot.robot_start()
+if __name__ == '__main__':
+    unittest.main()
 
-        sys.stdout = sys.__stdout__
 
